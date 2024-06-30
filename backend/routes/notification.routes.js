@@ -1,7 +1,6 @@
 import express from "express";
 import { middleware } from "../middleware/middleware.js";
 import {
-  deleteNotification,
   deleteNotifications,
   getNotifications,
 } from "../controllers/notification.controller.js";
