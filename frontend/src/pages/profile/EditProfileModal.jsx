@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useUpdateProfile from "../../Hooks/updateProfile";
 
-const EditProfileModal = () => {
+const EditProfileModal = ({ authUser }) => {
   const [formData, setFormData] = useState({
     fullname: "",
     username: "",
@@ -10,10 +11,23 @@ const EditProfileModal = () => {
     newPassword: "",
     currentPassword: "",
   });
-
+  const { updateProfile, isUpdatingProfile } = useUpdateProfile();
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  useEffect(() => {
+    if (authUser)
+      setFormData({
+        username: authUser?.username,
+        fullname: authUser?.fullname,
+        email: authUser?.email,
+        bio: authUser?.bio,
+        link: authUser?.link,
+        newPassword: "",
+        currentPassword: "",
+      });
+  }, [authUser]);
 
   return (
     <>
@@ -32,7 +46,7 @@ const EditProfileModal = () => {
             className="flex flex-col gap-4"
             onSubmit={(e) => {
               e.preventDefault();
-              alert("Profile updated successfully");
+              updateProfile(formData);
             }}
           >
             <div className="flex flex-wrap gap-2">
@@ -97,7 +111,7 @@ const EditProfileModal = () => {
               onChange={handleInputChange}
             />
             <button className="btn btn-primary rounded-full btn-sm text-white">
-              Update
+              {isUpdatingProfile ? "Updating..." : "Update"}
             </button>
           </form>
         </div>
